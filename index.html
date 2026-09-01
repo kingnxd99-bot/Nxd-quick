@@ -1,0 +1,1997 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NXD Quick — Everything you need, delivered in minutes</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Canvas Confetti for Checkout Celebrations -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#ecfdf5',
+                            100: '#d1fae5',
+                            200: '#a7f3d0',
+                            500: '#10b981',
+                            600: '#059669',
+                            700: '#047857',
+                            900: '#064e3b',
+                            dark: '#0f172a'
+                        }
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'float': 'float 3s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-6px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom scrollbars */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f8fafc;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        /* Glassmorphic utilities */
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+        }
+
+        /* Pulsing Radar Effect for Live Tracking */
+        .radar-ping {
+            animation: radar 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+        }
+        @keyframes radar {
+            75%, 100% {
+                transform: scale(2.2);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body class="bg-[#fafafa] text-slate-900 font-sans antialiased min-h-screen flex flex-col selection:bg-brand-100 selection:text-brand-900 pb-20 md:pb-0">
+
+    <!-- Top Announcement Bar -->
+    <div class="bg-brand-900 text-brand-100 text-xs font-medium py-1.5 px-4 text-center flex items-center justify-center gap-2">
+        <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] bg-brand-600 text-white font-bold tracking-wide">SUPERFAST</span>
+        <span>Free delivery on your first 3 orders above ₹149 with code <span class="font-mono font-bold text-white underline cursor-pointer" onclick="applyCouponCode('NXDFIRST')">NXDFIRST</span></span>
+    </div>
+
+    <!-- Sticky Navigation Header -->
+    <header class="sticky top-0 z-40 glass-nav border-b border-slate-200/80 transition-all duration-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16 md:h-20 gap-3 md:gap-8">
+                
+                <!-- Logo & Delivery Location -->
+                <div class="flex items-center gap-4 lg:gap-8 min-w-0">
+                    <a href="#" class="flex items-center gap-2 group flex-shrink-0">
+                        <div class="w-9 h-9 md:w-10 md:h-10 rounded-xl bg-brand-600 text-white flex items-center justify-center font-black text-xl shadow-md shadow-brand-600/20 group-hover:scale-105 transition-transform">
+                            <i data-lucide="zap" class="w-5 h-5 fill-white"></i>
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="font-extrabold text-lg md:text-xl tracking-tight text-slate-900 flex items-center gap-1">
+                                NXD<span class="text-brand-600">Quick</span>
+                            </span>
+                            <span class="text-[10px] text-slate-400 font-semibold tracking-wider -mt-1 hidden sm:block">10 MIN COMMERCE</span>
+                        </div>
+                    </a>
+
+                    <!-- Location Selector Button -->
+                    <button onclick="openLocationModal()" class="hidden sm:flex items-center gap-2 text-left px-3 py-1.5 rounded-xl hover:bg-slate-100/80 transition group border border-transparent hover:border-slate-200">
+                        <div class="w-8 h-8 rounded-lg bg-emerald-50 text-brand-600 flex items-center justify-center flex-shrink-0">
+                            <i data-lucide="map-pin" class="w-4 h-4"></i>
+                        </div>
+                        <div class="text-xs">
+                            <div class="font-bold text-slate-800 flex items-center gap-1">
+                                <span id="current-location-text" class="truncate max-w-[140px] md:max-w-[180px]">Indiranagar, Bangalore</span>
+                                <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-400 group-hover:translate-y-0.5 transition-transform"></i>
+                            </div>
+                            <div class="text-brand-600 font-semibold flex items-center gap-1 text-[11px]">
+                                <span class="w-1.5 h-1.5 rounded-full bg-brand-500 animate-pulse"></span>
+                                Arriving in <span class="underline font-bold" id="eta-header">11 mins</span>
+                            </div>
+                        </div>
+                    </button>
+                </div>
+
+                <!-- Desktop Search Bar -->
+                <div class="flex-1 max-w-xl relative hidden md:block">
+                    <div class="relative flex items-center">
+                        <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-4 pointer-events-none"></i>
+                        <input type="text" 
+                               id="main-search-input"
+                               onfocus="showSearchDropdown()"
+                               oninput="handleSearch(this.value)"
+                               placeholder="Search for groceries, farm milk, fresh fruits, electronics..." 
+                               class="w-full pl-11 pr-10 py-2.5 rounded-2xl bg-slate-100/90 border border-transparent focus:border-brand-500 focus:bg-white text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-4 focus:ring-brand-500/10 transition shadow-inner">
+                        <span class="absolute right-3 text-[10px] font-semibold bg-white border border-slate-200 text-slate-400 px-1.5 py-0.5 rounded shadow-sm">⌘K</span>
+                    </div>
+
+                    <!-- Instant Search Dropdown Results -->
+                    <div id="search-dropdown" class="hidden absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl shadow-2xl border border-slate-100 p-3 z-50 animate-in fade-in slide-in-from-top-2 duration-150">
+                        <div class="text-[11px] font-bold tracking-wider text-slate-400 uppercase px-3 py-1">Instant Results</div>
+                        <div id="search-results-list" class="divide-y divide-slate-50 max-h-72 overflow-y-auto">
+                            <!-- Populated dynamically via JS -->
+                        </div>
+                        <div class="p-2 border-t border-slate-100 bg-slate-50/50 rounded-xl mt-1 flex items-center justify-between text-xs text-slate-500">
+                            <span>Popular: <span class="text-brand-700 font-medium cursor-pointer hover:underline" onclick="quickSearch('Avocado')">Avocado</span>, <span class="text-brand-700 font-medium cursor-pointer hover:underline" onclick="quickSearch('Milk')">Milk</span>, <span class="text-brand-700 font-medium cursor-pointer hover:underline" onclick="quickSearch('Chips')">Chips</span></span>
+                            <span class="text-slate-400 text-[11px]">ESC to close</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Actions (Wishlist, Account, Cart) -->
+                <div class="flex items-center gap-2 sm:gap-3">
+                    
+                    <!-- Search button for mobile -->
+                    <button onclick="toggleMobileSearch()" class="md:hidden p-2.5 rounded-xl hover:bg-slate-100 text-slate-600 transition">
+                        <i data-lucide="search" class="w-5 h-5"></i>
+                    </button>
+
+                    <!-- Active Orders / Track Order Quick Action -->
+                    <button onclick="openTrackingModal()" id="active-order-pill" class="hidden items-center gap-2 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-brand-700 px-3 py-1.5 rounded-xl text-xs font-bold transition">
+                        <span class="relative flex h-2 w-2">
+                            <span class="radar-ping absolute inline-flex h-full w-full rounded-full bg-brand-400 opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-2 w-2 bg-brand-600"></span>
+                        </span>
+                        <span>Track Delivery (<span id="track-timer">11m</span>)</span>
+                    </button>
+
+                    <!-- Wishlist Button -->
+                    <button onclick="openWishlistModal()" class="relative p-2.5 rounded-xl hover:bg-slate-100 text-slate-700 transition">
+                        <i data-lucide="heart" class="w-5 h-5"></i>
+                        <span id="wishlist-badge" class="hidden absolute -top-1 -right-1 bg-rose-500 text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center shadow-sm">0</span>
+                    </button>
+
+                    <!-- User Account Modal Trigger -->
+                    <button onclick="openAuthModal()" class="flex items-center gap-2 p-1.5 sm:px-3 sm:py-2 rounded-xl hover:bg-slate-100 text-slate-700 transition border border-slate-200/60">
+                        <div class="w-7 h-7 rounded-full bg-slate-200 text-slate-700 flex items-center justify-center font-bold text-xs" id="user-avatar-initial">
+                            <i data-lucide="user" class="w-4 h-4 text-slate-600"></i>
+                        </div>
+                        <span class="text-xs font-semibold hidden lg:block" id="user-name-display">Sign In</span>
+                    </button>
+
+                    <!-- Main Cart Button -->
+                    <button onclick="openCartDrawer()" class="relative flex items-center gap-2 bg-brand-600 hover:bg-brand-700 text-white px-3.5 py-2.5 rounded-xl font-bold text-sm shadow-lg shadow-brand-600/20 active:scale-95 transition-all">
+                        <i data-lucide="shopping-bag" class="w-4 h-4"></i>
+                        <div class="flex flex-col text-left leading-none hidden sm:flex">
+                            <span id="cart-nav-count" class="text-[11px] font-medium text-emerald-100">0 items</span>
+                            <span id="cart-nav-total" class="font-extrabold text-xs">₹0</span>
+                        </div>
+                        <span id="cart-badge-mobile" class="sm:hidden text-xs font-bold bg-white text-brand-700 px-1.5 py-0.2 rounded-full">0</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Mobile Search Bar (Collapsible / inline on mobile) -->
+            <div id="mobile-search-bar" class="pb-3 md:hidden">
+                <div class="relative flex items-center">
+                    <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3.5 pointer-events-none"></i>
+                    <input type="text" 
+                           id="mobile-search-input"
+                           oninput="handleSearch(this.value)"
+                           placeholder="Search milk, fresh berries, earbuds..." 
+                           class="w-full pl-10 pr-4 py-2 rounded-xl bg-slate-100 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-500">
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 space-y-8">
+
+        <!-- Hero Section -->
+        <section class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-900 via-slate-800 to-brand-950 text-white p-6 sm:p-10 lg:p-12 shadow-2xl">
+            <!-- Background Decorative Gradients -->
+            <div class="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-brand-500/20 blur-3xl pointer-events-none"></div>
+            <div class="absolute -bottom-24 -left-24 w-80 h-80 rounded-full bg-emerald-600/10 blur-3xl pointer-events-none"></div>
+            
+            <div class="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                <div class="lg:col-span-7 space-y-5">
+                    
+                    <!-- Flash Badge -->
+                    <div class="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/15 px-3 py-1.5 rounded-full text-xs font-medium text-emerald-300">
+                        <span class="flex h-2 w-2 rounded-full bg-brand-400 animate-ping"></span>
+                        <span>⚡ Ultra-fast 10–20 minute delivery active now</span>
+                    </div>
+
+                    <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white leading-[1.15]">
+                        Everything you need.<br>
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-200 via-emerald-400 to-teal-300">Delivered fast.</span>
+                    </h1>
+
+                    <p class="text-slate-300 text-sm sm:text-base max-w-xl font-normal leading-relaxed">
+                        Handpicked farm-fresh produce, artisanal dairy, daily pantry essentials, cold sodas, and electronics brought to your doorstep with zero compromise.
+                    </p>
+
+                    <!-- CTA Buttons & Live Guarantee -->
+                    <div class="flex flex-wrap items-center gap-3 sm:gap-4 pt-2">
+                        <a href="#popular-section" class="bg-brand-500 hover:bg-brand-400 text-slate-950 font-bold px-6 py-3.5 rounded-2xl shadow-lg shadow-brand-500/25 transition duration-150 transform active:scale-95 flex items-center gap-2 text-sm">
+                            <span>Start Shopping</span>
+                            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </a>
+                        <button onclick="filterCategory('Flash Deals')" class="bg-white/10 hover:bg-white/15 border border-white/10 text-white font-semibold px-5 py-3.5 rounded-2xl transition duration-150 text-sm flex items-center gap-2 backdrop-blur-sm">
+                            <i data-lucide="flame" class="w-4 h-4 text-amber-400 fill-amber-400"></i>
+                            <span>View Flash Deals</span>
+                        </button>
+                    </div>
+
+                    <!-- Trust Stats Bar -->
+                    <div class="grid grid-cols-3 gap-4 pt-4 border-t border-white/10 max-w-md text-left">
+                        <div>
+                            <div class="text-lg sm:text-xl font-extrabold text-white">12 Mins</div>
+                            <div class="text-[11px] text-slate-400 font-medium">Average Delivery</div>
+                        </div>
+                        <div>
+                            <div class="text-lg sm:text-xl font-extrabold text-white">100% Fresh</div>
+                            <div class="text-[11px] text-slate-400 font-medium">Quality Guaranteed</div>
+                        </div>
+                        <div>
+                            <div class="text-lg sm:text-xl font-extrabold text-white">5,000+</div>
+                            <div class="text-[11px] text-slate-400 font-medium">Curated Items</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Hero Floating Graphic / Offer Card -->
+                <div class="lg:col-span-5 relative flex justify-center">
+                    <div class="relative w-full max-w-sm">
+                        <!-- Hero Card Showcase -->
+                        <div class="bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl p-5 shadow-2xl text-white space-y-4">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-2">
+                                    <div class="w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-sm">
+                                        <i data-lucide="package-check" class="w-4 h-4"></i>
+                                    </div>
+                                    <span class="text-xs font-bold">Dark Store #14 • Live</span>
+                                </div>
+                                <span class="bg-emerald-500/20 text-emerald-300 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">Fast Pack</span>
+                            </div>
+
+                            <!-- Live Featured Product Mock in Hero -->
+                            <div class="bg-slate-900/60 rounded-2xl p-3.5 border border-white/10 flex items-center gap-3">
+                                <img src="https://images.unsplash.com/photo-1587334274328-64186a80aeee?auto=format&fit=crop&w=200&q=80" alt="Fresh Strawberries" class="w-16 h-16 rounded-xl object-cover bg-white/5">
+                                <div class="flex-1 min-w-0">
+                                    <div class="text-xs font-semibold text-slate-200 truncate">Organic Mahabaleshwar Berries</div>
+                                    <div class="text-emerald-400 font-bold text-sm mt-0.5">₹149 <span class="text-slate-400 line-through text-xs font-normal">₹199</span></div>
+                                    <div class="text-[10px] text-slate-400 flex items-center gap-1 mt-1">
+                                        <i data-lucide="clock" class="w-3 h-3 text-brand-400"></i> Packed in 2 mins
+                                    </div>
+                                </div>
+                                <button onclick="quickAddToCart(heroStrawberryProduct)" class="bg-brand-500 text-slate-950 font-bold text-xs p-2 rounded-xl hover:bg-brand-400 transition shadow">
+                                    <i data-lucide="plus" class="w-4 h-4"></i>
+                                </button>
+                            </div>
+
+                            <!-- Delivery Simulation Bar in Hero -->
+                            <div class="space-y-1.5 pt-1">
+                                <div class="flex justify-between text-xs font-semibold text-slate-300">
+                                    <span>Rider Distance</span>
+                                    <span class="text-emerald-400">0.8 km away</span>
+                                </div>
+                                <div class="w-full bg-white/10 rounded-full h-2 overflow-hidden">
+                                    <div class="bg-gradient-to-r from-brand-500 to-emerald-300 h-2 rounded-full w-3/4 animate-pulse"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Floating Micro Badge -->
+                        <div class="absolute -bottom-4 -left-4 bg-white text-slate-900 rounded-2xl p-3 shadow-xl border border-slate-100 flex items-center gap-3 animate-float hidden sm:flex">
+                            <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center font-bold">
+                                🍌
+                            </div>
+                            <div class="text-xs">
+                                <div class="font-bold text-slate-900">100% Quality Checked</div>
+                                <div class="text-slate-500 text-[11px]">Farm direct harvest</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Category Horizontal Strip / Filter Grid -->
+        <section class="space-y-3">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h2 class="text-lg sm:text-xl font-bold text-slate-900 tracking-tight">Explore Categories</h2>
+                    <p class="text-xs text-slate-500 font-normal">Everything from morning milk to evening chargers</p>
+                </div>
+                <button onclick="filterCategory('All')" class="text-xs font-bold text-brand-600 hover:text-brand-700 flex items-center gap-1">
+                    <span>View All</span>
+                    <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+                </button>
+            </div>
+
+            <!-- Category Carousel Cards -->
+            <div class="flex gap-3 overflow-x-auto no-scrollbar py-2 -mx-4 px-4 sm:mx-0 sm:px-0" id="category-chips-container">
+                <!-- Injected by JavaScript -->
+            </div>
+        </section>
+
+        <!-- Flash Deals & Countdown Banner -->
+        <section class="bg-gradient-to-r from-amber-500/10 via-orange-500/5 to-rose-500/10 border border-amber-200/80 rounded-2xl p-4 sm:p-6 space-y-4">
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-2xl bg-amber-500 text-white flex items-center justify-center font-bold shadow-md shadow-amber-500/20">
+                        <i data-lucide="timer" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <h3 class="text-base sm:text-lg font-extrabold text-slate-900">Flash Deals of the Hour</h3>
+                            <span class="bg-amber-500 text-white text-[10px] font-extrabold px-2 py-0.5 rounded-full animate-pulse">UP TO 50% OFF</span>
+                        </div>
+                        <p class="text-xs text-slate-500">Limited stock deals renewed every 60 minutes</p>
+                    </div>
+                </div>
+
+                <!-- Live Countdown Timer -->
+                <div class="flex items-center gap-2 bg-white px-3.5 py-2 rounded-xl shadow-sm border border-slate-200">
+                    <span class="text-xs font-semibold text-slate-500">Ends In:</span>
+                    <div class="flex items-center gap-1 font-mono font-bold text-xs text-slate-800" id="flash-countdown">
+                        <span class="bg-slate-100 px-1.5 py-0.5 rounded" id="timer-hours">00</span>:
+                        <span class="bg-slate-100 px-1.5 py-0.5 rounded" id="timer-minutes">38</span>:
+                        <span class="bg-slate-100 px-1.5 py-0.5 rounded" id="timer-seconds">42</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Flash Deals Product Rail -->
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4" id="flash-deals-grid">
+                <!-- Rendered dynamically -->
+            </div>
+        </section>
+
+        <!-- Dynamic Filter & Sorting Bar -->
+        <div class="flex items-center justify-between border-y border-slate-200/80 py-3 gap-2 flex-wrap">
+            <div class="flex items-center gap-2 overflow-x-auto no-scrollbar">
+                <span class="text-xs font-bold text-slate-400 uppercase tracking-wider hidden sm:inline">Filter:</span>
+                <button onclick="setFilterTag('All')" class="filter-tag active-tag text-xs font-semibold px-3 py-1.5 rounded-xl border border-brand-600 bg-brand-50 text-brand-700 transition">All Items</button>
+                <button onclick="setFilterTag('Fresh')" class="filter-tag text-xs font-semibold px-3 py-1.5 rounded-xl border border-slate-200 bg-white text-slate-600 hover:border-slate-300 transition">🌿 Organic & Fresh</button>
+                <button onclick="setFilterTag('Under99')" class="filter-tag text-xs font-semibold px-3 py-1.5 rounded-xl border border-slate-200 bg-white text-slate-600 hover:border-slate-300 transition">🏷️ Under ₹99</button>
+                <button onclick="setFilterTag('Electronics')" class="filter-tag text-xs font-semibold px-3 py-1.5 rounded-xl border border-slate-200 bg-white text-slate-600 hover:border-slate-300 transition">⚡ Tech & Gadgets</button>
+            </div>
+
+            <div class="flex items-center gap-2 ml-auto">
+                <span class="text-xs text-slate-400 font-medium hidden sm:inline">Sort by:</span>
+                <select id="sort-select" onchange="handleSortChange(this.value)" class="bg-white border border-slate-200 rounded-xl px-2.5 py-1.5 text-xs font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-brand-500">
+                    <option value="popular">Popularity</option>
+                    <option value="price-low">Price: Low to High</option>
+                    <option value="price-high">Price: High to Low</option>
+                    <option value="discount">Biggest Discount</option>
+                    <option value="rating">Top Rated</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Section 1: Popular Near You -->
+        <section id="popular-section" class="space-y-4">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h2 class="text-xl font-extrabold text-slate-900 tracking-tight" id="main-catalog-title">Popular Near You</h2>
+                    <p class="text-xs text-slate-500">Based on orders in Indiranagar in the last hour</p>
+                </div>
+                <span class="text-xs font-medium text-slate-400" id="product-count-display">Showing 16 items</span>
+            </div>
+
+            <!-- Main Dynamic Product Grid -->
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-3 sm:gap-5" id="main-product-grid">
+                <!-- Products injected via JS -->
+            </div>
+        </section>
+
+        <!-- Fresh Today Feature Section -->
+        <section class="rounded-3xl bg-emerald-900 text-white p-6 sm:p-8 relative overflow-hidden">
+            <div class="relative z-10 max-w-xl space-y-3">
+                <span class="inline-block bg-emerald-700/80 text-emerald-200 text-[10px] font-extrabold uppercase tracking-widest px-2.5 py-1 rounded-md">100% Certified Farm Harvest</span>
+                <h3 class="text-2xl sm:text-3xl font-extrabold text-white">Fresh Today — From Soil to Door in 4 Hours</h3>
+                <p class="text-slate-300 text-xs sm:text-sm">Hydroponic greens, crisp apples, and pesticide-safe daily vegetables harvested at dawn.</p>
+                <div class="pt-2">
+                    <button onclick="filterCategory('Fruits & Vegetables')" class="bg-emerald-400 hover:bg-emerald-300 text-emerald-950 font-bold px-4 py-2.5 rounded-xl text-xs transition">
+                        Shop Fresh Vegetables & Fruits →
+                    </button>
+                </div>
+            </div>
+            <img src="https://images.unsplash.com/photo-1610348725531-843dff563e2c?auto=format&fit=crop&w=600&q=80" alt="Fresh Greens" class="hidden md:block absolute -right-10 -bottom-10 w-96 h-80 object-cover rounded-2xl opacity-40 mix-blend-overlay">
+        </section>
+
+        <!-- Value Proposition Banners -->
+        <section class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4">
+            <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex items-start gap-3">
+                <div class="w-10 h-10 rounded-xl bg-emerald-50 text-brand-600 flex items-center justify-center flex-shrink-0 font-bold">
+                    <i data-lucide="zap" class="w-5 h-5"></i>
+                </div>
+                <div>
+                    <h4 class="font-bold text-sm text-slate-900">10–20 Min Delivery</h4>
+                    <p class="text-xs text-slate-500 mt-0.5 leading-relaxed">Micro-warehouses located within 2km of your location ensure instant packing.</p>
+                </div>
+            </div>
+            <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex items-start gap-3">
+                <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center flex-shrink-0 font-bold">
+                    <i data-lucide="shield-check" class="w-5 h-5"></i>
+                </div>
+                <div>
+                    <h4 class="font-bold text-sm text-slate-900">No Questions Asked Returns</h4>
+                    <p class="text-xs text-slate-500 mt-0.5 leading-relaxed">Not happy with freshness or package? Instant refund credited right to your UPI wallet.</p>
+                </div>
+            </div>
+            <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex items-start gap-3">
+                <div class="w-10 h-10 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center flex-shrink-0 font-bold">
+                    <i data-lucide="badge-percent" class="w-5 h-5"></i>
+                </div>
+                <div>
+                    <h4 class="font-bold text-sm text-slate-900">Best Market Prices</h4>
+                    <p class="text-xs text-slate-500 mt-0.5 leading-relaxed">Direct partnerships with local dairies and brands mean lowest prices daily.</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-200 mt-16 pt-12 pb-16 text-slate-600 text-xs">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-8">
+                <div class="col-span-2 space-y-3">
+                    <div class="flex items-center gap-2">
+                        <div class="w-7 h-7 rounded-lg bg-brand-600 text-white flex items-center justify-center font-bold">
+                            <i data-lucide="zap" class="w-4 h-4 fill-white"></i>
+                        </div>
+                        <span class="font-extrabold text-base text-slate-900">NXD<span class="text-brand-600">Quick</span></span>
+                    </div>
+                    <p class="text-slate-500 max-w-sm leading-relaxed">
+                        Next-generation quick commerce built on high reliability, cold-chain logistics, and premium curated products.
+                    </p>
+                    <div class="text-slate-400 text-[11px]">
+                        © 2025 NXD Quick Technologies Private Limited. All rights reserved.
+                    </div>
+                </div>
+                <div>
+                    <h5 class="font-bold text-slate-900 mb-2.5">Categories</h5>
+                    <ul class="space-y-2">
+                        <li><a href="javascript:filterCategory('Fruits & Vegetables')" class="hover:text-brand-600 transition">Fruits & Vegetables</a></li>
+                        <li><a href="javascript:filterCategory('Dairy & Breakfast')" class="hover:text-brand-600 transition">Dairy & Breakfast</a></li>
+                        <li><a href="javascript:filterCategory('Snacks & Beverages')" class="hover:text-brand-600 transition">Snacks & Drinks</a></li>
+                        <li><a href="javascript:filterCategory('Electronics')" class="hover:text-brand-600 transition">Electronics & Cables</a></li>
+                        <li><a href="javascript:filterCategory('Personal Care')" class="hover:text-brand-600 transition">Personal Care</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h5 class="font-bold text-slate-900 mb-2.5">Company</h5>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="hover:text-brand-600 transition">About NXD</a></li>
+                        <li><a href="#" class="hover:text-brand-600 transition">Dark Store Locations</a></li>
+                        <li><a href="#" class="hover:text-brand-600 transition">Partner as Seller</a></li>
+                        <li><a href="#" class="hover:text-brand-600 transition">Delivery Partner Fleet</a></li>
+                        <li><a href="#" class="hover:text-brand-600 transition">Careers</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h5 class="font-bold text-slate-900 mb-2.5">Help & Trust</h5>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="hover:text-brand-600 transition">Customer Support (24/7)</a></li>
+                        <li><a href="#" class="hover:text-brand-600 transition">Refund & Cancellation</a></li>
+                        <li><a href="#" class="hover:text-brand-600 transition">Terms of Service</a></li>
+                        <li><a href="#" class="hover:text-brand-600 transition">Privacy Policy</a></li>
+                        <li><a href="#" class="hover:text-brand-600 transition">Food Safety FSSAI</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ================= MODALS & DRAWERS ================= -->
+
+    <!-- Mobile Bottom Fixed Navigation Bar -->
+    <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-lg border-t border-slate-200 z-40 px-3 py-2 flex items-center justify-around text-slate-600">
+        <button onclick="scrollToTop(); filterCategory('All')" class="flex flex-col items-center gap-0.5 text-brand-600">
+            <i data-lucide="home" class="w-5 h-5"></i>
+            <span class="text-[10px] font-bold">Home</span>
+        </button>
+        <button onclick="openCategorySheet()" class="flex flex-col items-center gap-0.5 hover:text-brand-600">
+            <i data-lucide="grid" class="w-5 h-5"></i>
+            <span class="text-[10px] font-semibold">Categories</span>
+        </button>
+        <button onclick="openTrackingModal()" class="flex flex-col items-center gap-0.5 hover:text-brand-600 relative">
+            <i data-lucide="clock" class="w-5 h-5"></i>
+            <span class="text-[10px] font-semibold">Orders</span>
+            <span id="mobile-order-dot" class="hidden absolute top-0 right-1 w-2 h-2 rounded-full bg-brand-500"></span>
+        </button>
+        <button onclick="openWishlistModal()" class="flex flex-col items-center gap-0.5 hover:text-brand-600">
+            <i data-lucide="heart" class="w-5 h-5"></i>
+            <span class="text-[10px] font-semibold">Saved</span>
+        </button>
+        <button onclick="openCartDrawer()" class="flex flex-col items-center gap-0.5 hover:text-brand-600 relative">
+            <div class="relative">
+                <i data-lucide="shopping-bag" class="w-5 h-5"></i>
+                <span id="bottom-cart-badge" class="hidden absolute -top-1.5 -right-2 bg-brand-600 text-white text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center">0</span>
+            </div>
+            <span class="text-[10px] font-semibold">Cart</span>
+        </button>
+    </nav>
+
+    <!-- Cart Slide-Over Drawer -->
+    <div id="cart-drawer" class="fixed inset-0 z-50 overflow-hidden hidden transition-opacity duration-300">
+        <!-- Backdrop -->
+        <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity" onclick="closeCartDrawer()"></div>
+
+        <div class="fixed inset-y-0 right-0 max-w-full flex pl-10">
+            <div class="w-screen max-w-md bg-white shadow-2xl flex flex-col">
+                
+                <!-- Drawer Header -->
+                <div class="p-4 sm:p-5 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+                    <div class="flex items-center gap-2">
+                        <div class="w-8 h-8 rounded-lg bg-brand-50 text-brand-700 flex items-center justify-center font-bold">
+                            <i data-lucide="shopping-bag" class="w-4 h-4"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-slate-900 text-sm sm:text-base">Your Cart</h3>
+                            <div class="text-xs text-brand-700 font-medium" id="drawer-delivery-promise">⚡ Delivery in 10-15 mins</div>
+                        </div>
+                    </div>
+                    <button onclick="closeCartDrawer()" class="p-2 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition">
+                        <i data-lucide="x" class="w-5 h-5"></i>
+                    </button>
+                </div>
+
+                <!-- Free Delivery Progress Bar -->
+                <div class="bg-brand-50/60 p-3 border-b border-brand-100 text-xs">
+                    <div class="flex justify-between font-semibold text-brand-900 mb-1">
+                        <span id="free-delivery-text">Add ₹99 more for FREE Delivery</span>
+                        <span id="free-delivery-percent">65%</span>
+                    </div>
+                    <div class="w-full bg-slate-200 rounded-full h-1.5 overflow-hidden">
+                        <div id="free-delivery-bar" class="bg-brand-500 h-1.5 rounded-full transition-all duration-300" style="width: 65%"></div>
+                    </div>
+                </div>
+
+                <!-- Cart Items List (Scrollable) -->
+                <div class="flex-1 overflow-y-auto p-4 sm:p-5 divide-y divide-slate-100 space-y-3" id="cart-items-container">
+                    <!-- Populated by JS -->
+                </div>
+
+                <!-- Bill Breakdown & Checkout Trigger -->
+                <div class="border-t border-slate-100 p-4 sm:p-5 bg-slate-50 space-y-3">
+                    
+                    <!-- Coupon code input -->
+                    <div class="flex gap-2">
+                        <div class="relative flex-1">
+                            <i data-lucide="tag" class="w-3.5 h-3.5 text-slate-400 absolute left-3 top-3"></i>
+                            <input type="text" id="coupon-input" placeholder="Enter coupon (e.g. NXDFIRST)" class="w-full pl-8 pr-3 py-2 text-xs uppercase font-mono rounded-xl bg-white border border-slate-200 focus:outline-none focus:border-brand-500">
+                        </div>
+                        <button onclick="applyCouponInput()" class="bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold px-4 py-2 rounded-xl transition">Apply</button>
+                    </div>
+                    <div id="coupon-applied-tag" class="hidden items-center justify-between bg-emerald-100 border border-emerald-200 text-emerald-800 px-3 py-1.5 rounded-xl text-xs font-semibold">
+                        <span class="flex items-center gap-1.5">
+                            <i data-lucide="check-circle" class="w-3.5 h-3.5 text-emerald-600"></i>
+                            <span id="coupon-name-text">NXDFIRST (-₹100)</span>
+                        </span>
+                        <button onclick="removeCoupon()" class="text-xs text-rose-600 font-bold hover:underline">Remove</button>
+                    </div>
+
+                    <!-- Bill details -->
+                    <div class="space-y-1.5 text-xs text-slate-600 pt-1">
+                        <div class="flex justify-between">
+                            <span>Item Total</span>
+                            <span class="font-medium text-slate-900" id="bill-item-total">₹0</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Delivery Partner Fee</span>
+                            <span class="font-medium text-slate-900" id="bill-delivery-fee">₹25</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Handling & Safety Fee</span>
+                            <span class="font-medium text-slate-900">₹4</span>
+                        </div>
+                        <div class="flex justify-between text-emerald-600" id="bill-discount-row">
+                            <span>Discount Applied</span>
+                            <span class="font-semibold" id="bill-discount-amount">-₹0</span>
+                        </div>
+                        <div class="flex justify-between text-sm font-extrabold text-slate-900 pt-2 border-t border-slate-200">
+                            <span>To Pay</span>
+                            <span id="bill-grand-total">₹0</span>
+                        </div>
+                    </div>
+
+                    <!-- Checkout Trigger Button -->
+                    <button onclick="openCheckoutModal()" id="cart-checkout-btn" class="w-full bg-brand-600 hover:bg-brand-700 text-white py-3.5 rounded-2xl font-bold text-sm shadow-lg shadow-brand-600/20 flex items-center justify-between px-5 transition duration-150 transform active:scale-95 disabled:opacity-50 disabled:pointer-events-none">
+                        <div class="text-left leading-tight">
+                            <div class="text-[11px] text-emerald-100 font-medium">Proceed to Checkout</div>
+                            <div class="text-sm font-extrabold" id="checkout-btn-price">₹0</div>
+                        </div>
+                        <div class="flex items-center gap-1.5">
+                            <span>Select Address</span>
+                            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </div>
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Product Detail QuickView Modal -->
+    <div id="product-detail-modal" class="fixed inset-0 z-50 overflow-y-auto hidden">
+        <div class="min-h-screen px-4 text-center flex items-center justify-center">
+            <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity" onclick="closeProductModal()"></div>
+            
+            <div class="inline-block w-full max-w-2xl p-6 my-8 text-left bg-white rounded-3xl shadow-2xl transform transition-all relative z-10 overflow-hidden">
+                <button onclick="closeProductModal()" class="absolute top-4 right-4 p-2 rounded-full hover:bg-slate-100 text-slate-400 hover:text-slate-700">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6" id="modal-product-content">
+                    <!-- Populated dynamically -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Checkout Modal (Address + Payment Selection) -->
+    <div id="checkout-modal" class="fixed inset-0 z-50 overflow-y-auto hidden">
+        <div class="min-h-screen px-4 text-center flex items-center justify-center">
+            <div class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm" onclick="closeCheckoutModal()"></div>
+            
+            <div class="inline-block w-full max-w-lg p-6 my-8 text-left bg-white rounded-3xl shadow-2xl relative z-10 space-y-5">
+                
+                <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+                    <div>
+                        <h3 class="font-extrabold text-slate-900 text-lg">Confirm & Pay</h3>
+                        <p class="text-xs text-slate-500">Fast 10–20 minute doorstep dispatch</p>
+                    </div>
+                    <button onclick="closeCheckoutModal()" class="p-2 rounded-xl hover:bg-slate-100 text-slate-400">
+                        <i data-lucide="x" class="w-5 h-5"></i>
+                    </button>
+                </div>
+
+                <!-- Delivery Address Selector -->
+                <div class="space-y-2">
+                    <div class="flex justify-between items-center">
+                        <label class="text-xs font-bold text-slate-700">Delivering To:</label>
+                        <span class="text-xs font-bold text-brand-600 cursor-pointer" onclick="openLocationModal()">Change</span>
+                    </div>
+                    <div class="bg-slate-50 border border-slate-200 rounded-2xl p-3.5 flex items-start gap-3">
+                        <div class="w-8 h-8 rounded-xl bg-brand-100 text-brand-700 flex items-center justify-center flex-shrink-0 font-bold">
+                            <i data-lucide="home" class="w-4 h-4"></i>
+                        </div>
+                        <div class="text-xs flex-1">
+                            <div class="font-bold text-slate-800">Home • Indiranagar 100ft Rd</div>
+                            <div class="text-slate-500 mt-0.5">Flat 402, Greenfield Apts, 12th Main, Indiranagar, Bangalore - 560038</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Payment Method Selection -->
+                <div class="space-y-2">
+                    <label class="text-xs font-bold text-slate-700">Choose Payment Method:</label>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                        
+                        <label class="payment-method-card border-2 border-brand-500 bg-brand-50/40 rounded-2xl p-3 flex flex-col items-center justify-center text-center cursor-pointer hover:border-brand-600 transition">
+                            <input type="radio" name="paymentMethod" value="UPI" checked class="sr-only">
+                            <i data-lucide="smartphone" class="w-5 h-5 text-brand-700 mb-1"></i>
+                            <span class="text-xs font-extrabold text-slate-800">Instant UPI</span>
+                            <span class="text-[10px] text-brand-700 font-semibold">GPay / PhonePe</span>
+                        </label>
+
+                        <label class="payment-method-card border border-slate-200 rounded-2xl p-3 flex flex-col items-center justify-center text-center cursor-pointer hover:border-slate-400 transition">
+                            <input type="radio" name="paymentMethod" value="Card" class="sr-only">
+                            <i data-lucide="credit-card" class="w-5 h-5 text-slate-600 mb-1"></i>
+                            <span class="text-xs font-bold text-slate-800">Cards</span>
+                            <span class="text-[10px] text-slate-400">Visa / Master</span>
+                        </label>
+
+                        <label class="payment-method-card border border-slate-200 rounded-2xl p-3 flex flex-col items-center justify-center text-center cursor-pointer hover:border-slate-400 transition">
+                            <input type="radio" name="paymentMethod" value="COD" class="sr-only">
+                            <i data-lucide="banknote" class="w-5 h-5 text-slate-600 mb-1"></i>
+                            <span class="text-xs font-bold text-slate-800">Cash/UPI on Delivery</span>
+                            <span class="text-[10px] text-slate-400">Pay at door</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Final Amount Summary Pill -->
+                <div class="bg-slate-100 rounded-2xl p-3.5 flex items-center justify-between text-xs">
+                    <div>
+                        <div class="text-slate-500">Total Payable Amount</div>
+                        <div class="text-slate-900 font-extrabold text-base" id="modal-checkout-total">₹0</div>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-brand-700 font-bold">100% Safe Checkout</div>
+                        <div class="text-slate-400 text-[10px]">256-Bit Encrypted</div>
+                    </div>
+                </div>
+
+                <!-- Place Order CTA -->
+                <button onclick="simulateOrderPlacement()" id="place-order-button" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-extrabold py-3.5 rounded-2xl shadow-xl shadow-brand-600/30 text-sm flex items-center justify-center gap-2 transition duration-150 transform active:scale-95">
+                    <i data-lucide="shield-check" class="w-4 h-4"></i>
+                    <span>Place Order • <span id="place-order-price">₹0</span></span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Live Order Tracking Screen Modal -->
+    <div id="tracking-modal" class="fixed inset-0 z-50 overflow-y-auto hidden">
+        <div class="min-h-screen px-4 text-center flex items-center justify-center">
+            <div class="fixed inset-0 bg-slate-900/80 backdrop-blur-md" onclick="closeTrackingModal()"></div>
+            
+            <div class="inline-block w-full max-w-lg p-6 my-8 text-left bg-white rounded-3xl shadow-2xl relative z-10 space-y-5 overflow-hidden">
+                
+                <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                    <div class="flex items-center gap-2">
+                        <span class="w-3 h-3 rounded-full bg-brand-500 animate-ping"></span>
+                        <h3 class="font-extrabold text-slate-900 text-base">Live Delivery Tracking</h3>
+                    </div>
+                    <button onclick="closeTrackingModal()" class="p-2 rounded-xl hover:bg-slate-100 text-slate-400">
+                        <i data-lucide="x" class="w-5 h-5"></i>
+                    </button>
+                </div>
+
+                <!-- ETA Banner -->
+                <div class="bg-gradient-to-br from-brand-900 to-slate-900 text-white p-5 rounded-2xl shadow-lg relative overflow-hidden">
+                    <div class="relative z-10 flex items-center justify-between">
+                        <div>
+                            <div class="text-xs font-semibold text-brand-300 uppercase tracking-wide">Estimated Arrival</div>
+                            <div class="text-3xl font-black text-white mt-0.5 tracking-tight" id="live-eta-countdown">11 Mins</div>
+                            <div class="text-xs text-slate-300 mt-1">Order #NXD-88291 • Dark Store #4 Indiranagar</div>
+                        </div>
+                        <div class="w-14 h-14 rounded-2xl bg-brand-500/20 border border-brand-400/30 flex items-center justify-center text-3xl">
+                            🛵
+                        </div>
+                    </div>
+                    <div class="w-full bg-white/10 rounded-full h-2 mt-4 overflow-hidden">
+                        <div id="tracking-progress-bar" class="bg-brand-400 h-2 rounded-full transition-all duration-1000" style="width: 65%;"></div>
+                    </div>
+                </div>
+
+                <!-- Simulated Live GPS Map -->
+                <div class="relative h-44 bg-slate-100 rounded-2xl overflow-hidden border border-slate-200">
+                    <!-- Map background vector styling -->
+                    <div class="absolute inset-0 opacity-40 bg-[radial-gradient(#94a3b8_1px,transparent_1px)] [background-size:16px_16px]"></div>
+                    
+                    <!-- Simulated Route Line SVG -->
+                    <svg class="absolute inset-0 w-full h-full" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M 60 120 Q 180 30 380 90" fill="none" stroke="#10b981" stroke-width="4" stroke-dasharray="6,6" class="animate-pulse" />
+                    </svg>
+
+                    <!-- Store Pin -->
+                    <div class="absolute bottom-8 left-10 flex flex-col items-center">
+                        <div class="bg-slate-900 text-white text-[10px] font-bold px-2 py-0.5 rounded shadow">Dark Store</div>
+                        <div class="w-4 h-4 bg-slate-900 rounded-full border-2 border-white shadow"></div>
+                    </div>
+
+                    <!-- Rider Moving Icon -->
+                    <div class="absolute top-12 left-1/2 -translate-x-1/2 flex flex-col items-center animate-bounce">
+                        <div class="bg-brand-600 text-white text-[10px] font-extrabold px-2 py-0.5 rounded-full shadow-lg flex items-center gap-1">
+                            <span>🛵 Rider on way</span>
+                        </div>
+                        <div class="w-3 h-3 bg-brand-600 rounded-full border-2 border-white shadow"></div>
+                    </div>
+
+                    <!-- Customer Home Pin -->
+                    <div class="absolute top-14 right-10 flex flex-col items-center">
+                        <div class="bg-brand-900 text-white text-[10px] font-bold px-2 py-0.5 rounded shadow">Your Door</div>
+                        <div class="w-4 h-4 bg-brand-900 rounded-full border-2 border-white shadow"></div>
+                    </div>
+                </div>
+
+                <!-- Delivery Partner Profile Card -->
+                <div class="bg-slate-50 border border-slate-200/80 rounded-2xl p-3.5 flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=120&q=80" alt="Rider" class="w-11 h-11 rounded-full object-cover border-2 border-brand-500">
+                        <div>
+                            <div class="font-bold text-xs text-slate-900 flex items-center gap-1.5">
+                                <span>Ramesh Kumar</span>
+                                <span class="bg-emerald-100 text-emerald-800 text-[9px] font-extrabold px-1.5 py-0.2 rounded">4.9 ★</span>
+                            </div>
+                            <div class="text-slate-500 text-[11px]">Vaccinated • EV Delivery Rider</div>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <a href="tel:180012345" class="p-2.5 rounded-xl bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 shadow-sm transition">
+                            <i data-lucide="phone" class="w-4 h-4 text-brand-700"></i>
+                        </a>
+                        <button onclick="sendRiderTip()" class="px-3 py-2 rounded-xl bg-brand-600 hover:bg-brand-700 text-white text-xs font-bold shadow transition">
+                            Tip ₹20
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 4-Step Order Status Timeline -->
+                <div class="space-y-3 pt-1">
+                    <div class="flex items-start gap-3">
+                        <div class="w-6 h-6 rounded-full bg-brand-600 text-white flex items-center justify-center font-bold text-xs flex-shrink-0">✓</div>
+                        <div class="text-xs">
+                            <div class="font-bold text-slate-900">Order Placed & Confirmed</div>
+                            <div class="text-slate-400 text-[10px]">Received by Indiranagar Dark Store #4</div>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-3">
+                        <div class="w-6 h-6 rounded-full bg-brand-600 text-white flex items-center justify-center font-bold text-xs flex-shrink-0">✓</div>
+                        <div class="text-xs">
+                            <div class="font-bold text-slate-900">Items Picked & Quality Checked</div>
+                            <div class="text-slate-400 text-[10px]">Cold chain bags packed with safety seal</div>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-3">
+                        <div class="w-6 h-6 rounded-full bg-brand-500 text-white flex items-center justify-center font-bold text-xs flex-shrink-0 animate-pulse">⚡</div>
+                        <div class="text-xs">
+                            <div class="font-bold text-brand-700">Out for Delivery (Rider Ramesh)</div>
+                            <div class="text-slate-400 text-[10px]">Estimated at your gate in 9 minutes</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Location Modal -->
+    <div id="location-modal" class="fixed inset-0 z-50 overflow-y-auto hidden">
+        <div class="min-h-screen px-4 text-center flex items-center justify-center">
+            <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm" onclick="closeLocationModal()"></div>
+            
+            <div class="inline-block w-full max-w-md p-6 my-8 text-left bg-white rounded-3xl shadow-2xl relative z-10 space-y-4">
+                <div class="flex items-center justify-between">
+                    <h3 class="font-extrabold text-slate-900 text-base">Select Delivery Location</h3>
+                    <button onclick="closeLocationModal()" class="p-1.5 rounded-lg hover:bg-slate-100 text-slate-400">
+                        <i data-lucide="x" class="w-4 h-4"></i>
+                    </button>
+                </div>
+
+                <div class="relative">
+                    <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3 top-3"></i>
+                    <input type="text" placeholder="Search apartment, road, or pincode..." class="w-full pl-9 pr-3 py-2 text-xs rounded-xl bg-slate-100 border border-transparent focus:border-brand-500 focus:bg-white focus:outline-none">
+                </div>
+
+                <div class="space-y-2">
+                    <div class="text-xs font-bold text-slate-400 uppercase tracking-wider">Saved Addresses</div>
+                    <div onclick="selectLocation('Indiranagar, Bangalore', '11 mins')" class="p-3 rounded-2xl border border-brand-500 bg-brand-50/50 flex items-start gap-3 cursor-pointer">
+                        <i data-lucide="home" class="w-4 h-4 text-brand-700 mt-0.5"></i>
+                        <div class="text-xs">
+                            <div class="font-bold text-slate-900">Home (Indiranagar)</div>
+                            <div class="text-slate-500">12th Main Rd, HAL 2nd Stage, Bangalore</div>
+                            <span class="text-brand-700 font-bold text-[10px]">⚡ 11 mins delivery</span>
+                        </div>
+                    </div>
+                    <div onclick="selectLocation('Koramangala 4th Block', '14 mins')" class="p-3 rounded-2xl border border-slate-200 hover:border-slate-300 flex items-start gap-3 cursor-pointer">
+                        <i data-lucide="briefcase" class="w-4 h-4 text-slate-500 mt-0.5"></i>
+                        <div class="text-xs">
+                            <div class="font-bold text-slate-900">Office (Koramangala)</div>
+                            <div class="text-slate-500">80ft Rd, 4th Block, Koramangala, Bangalore</div>
+                            <span class="text-slate-500 font-medium text-[10px]">⚡ 14 mins delivery</span>
+                        </div>
+                    </div>
+                    <div onclick="selectLocation('HSR Layout Sector 1', '12 mins')" class="p-3 rounded-2xl border border-slate-200 hover:border-slate-300 flex items-start gap-3 cursor-pointer">
+                        <i data-lucide="map-pin" class="w-4 h-4 text-slate-500 mt-0.5"></i>
+                        <div class="text-xs">
+                            <div class="font-bold text-slate-900">HSR Layout Sector 1</div>
+                            <div class="text-slate-500">Near 27th Main Club, HSR Layout</div>
+                            <span class="text-slate-500 font-medium text-[10px]">⚡ 12 mins delivery</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Auth / Login Modal -->
+    <div id="auth-modal" class="fixed inset-0 z-50 overflow-y-auto hidden">
+        <div class="min-h-screen px-4 text-center flex items-center justify-center">
+            <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm" onclick="closeAuthModal()"></div>
+            
+            <div class="inline-block w-full max-w-sm p-6 my-8 text-left bg-white rounded-3xl shadow-2xl relative z-10 space-y-4">
+                <div class="flex justify-between items-center">
+                    <div class="w-9 h-9 rounded-xl bg-brand-600 text-white flex items-center justify-center font-bold">
+                        <i data-lucide="zap" class="w-5 h-5"></i>
+                    </div>
+                    <button onclick="closeAuthModal()" class="p-1.5 rounded-lg hover:bg-slate-100 text-slate-400">
+                        <i data-lucide="x" class="w-4 h-4"></i>
+                    </button>
+                </div>
+
+                <div class="space-y-1">
+                    <h3 class="font-extrabold text-slate-900 text-xl">Sign in to NXD Quick</h3>
+                    <p class="text-xs text-slate-500">Manage orders, saved addresses and exclusive cashback.</p>
+                </div>
+
+                <div class="space-y-3 pt-2">
+                    <div>
+                        <label class="text-[11px] font-bold text-slate-600 uppercase">Phone Number</label>
+                        <div class="flex gap-2 mt-1">
+                            <span class="inline-flex items-center px-3 rounded-xl border border-slate-200 bg-slate-50 text-xs font-bold text-slate-600">+91</span>
+                            <input type="tel" id="login-phone" placeholder="98765 43210" class="flex-1 px-3 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none focus:border-brand-500">
+                        </div>
+                    </div>
+                    <button onclick="simulateLogin()" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold py-2.5 rounded-xl text-xs shadow-md transition">
+                        Get OTP & Continue
+                    </button>
+                    <div class="text-center text-[10px] text-slate-400">
+                        By continuing, you agree to NXD Quick's Terms of Service & Privacy Policy.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Wishlist Drawer Modal -->
+    <div id="wishlist-modal" class="fixed inset-0 z-50 overflow-hidden hidden">
+        <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onclick="closeWishlistModal()"></div>
+        <div class="fixed inset-y-0 right-0 max-w-full flex pl-10">
+            <div class="w-screen max-w-md bg-white shadow-2xl flex flex-col p-5">
+                <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                    <div class="flex items-center gap-2">
+                        <i data-lucide="heart" class="w-5 h-5 text-rose-500 fill-rose-500"></i>
+                        <h3 class="font-extrabold text-slate-900 text-base">Saved Items</h3>
+                    </div>
+                    <button onclick="closeWishlistModal()" class="p-1.5 rounded-lg hover:bg-slate-100 text-slate-400">
+                        <i data-lucide="x" class="w-4 h-4"></i>
+                    </button>
+                </div>
+                <div class="flex-1 overflow-y-auto divide-y divide-slate-100 py-3" id="wishlist-items-container">
+                    <!-- Dynamic Wishlist Items -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+    <!-- ================= JAVASCRIPT STATE & LOGIC ================= -->
+    <script>
+        // --- MASTER PRODUCT DATABASE ---
+        const PRODUCTS = [
+            {
+                id: 'p1',
+                name: 'Fresh Hass Avocado (Imported)',
+                category: 'Fruits & Vegetables',
+                weight: '1 pc (approx. 200g)',
+                price: 99,
+                mrp: 149,
+                discount: 33,
+                rating: 4.8,
+                reviewsCount: 420,
+                eta: '9 mins',
+                tags: ['Fresh', 'Popular'],
+                image: 'https://images.unsplash.com/photo-1523049673857-eb18f1d7b578?auto=format&fit=crop&w=400&q=80',
+                description: 'Creamy, rich Hass avocados packed with healthy fats. Hand-checked for optimal ripeness so they are ready to eat.'
+            },
+            {
+                id: 'p2',
+                name: 'Epigamia Greek Yogurt - Wild Blueberry',
+                category: 'Dairy & Breakfast',
+                weight: '120g Cup',
+                price: 65,
+                mrp: 80,
+                discount: 18,
+                rating: 4.9,
+                reviewsCount: 950,
+                eta: '8 mins',
+                tags: ['Under99', 'Popular'],
+                image: 'https://images.unsplash.com/photo-1488477181946-6428a0291777?auto=format&fit=crop&w=400&q=80',
+                description: 'High protein Greek yogurt blended with real whole blueberries. Zero preservatives, rich probiotic snack.'
+            },
+            {
+                id: 'p3',
+                name: 'Organic Hydroponic Baby Spinach',
+                category: 'Fruits & Vegetables',
+                weight: '200g Pack',
+                price: 49,
+                mrp: 75,
+                discount: 34,
+                rating: 4.7,
+                reviewsCount: 310,
+                eta: '10 mins',
+                tags: ['Fresh', 'Under99'],
+                image: 'https://images.unsplash.com/photo-1576045057995-568f588f82fb?auto=format&fit=crop&w=400&q=80',
+                description: 'Tender, washed and pesticide-free hydroponic spinach leaves. Perfect for raw salads or quick morning smoothies.'
+            },
+            {
+                id: 'p4',
+                name: 'Amul Taaza Fresh Homogenised Toned Milk',
+                category: 'Dairy & Breakfast',
+                weight: '1 Litre Tetrapack',
+                price: 74,
+                mrp: 75,
+                discount: 2,
+                rating: 4.9,
+                reviewsCount: 2840,
+                eta: '8 mins',
+                tags: ['Under99', 'Popular'],
+                image: 'https://images.unsplash.com/photo-1550583724-b2692b85b150?auto=format&fit=crop&w=400&q=80',
+                description: 'Pure, fresh and hygienic toned milk with no added chemicals. Ideal for your daily tea, coffee, and cereal.'
+            },
+            {
+                id: 'p5',
+                name: 'Artisanal Sourdough Country Loaf',
+                category: 'Dairy & Breakfast',
+                weight: '400g Fresh Loaf',
+                price: 139,
+                mrp: 180,
+                discount: 22,
+                rating: 4.9,
+                reviewsCount: 184,
+                eta: '12 mins',
+                tags: ['Popular'],
+                image: 'https://images.unsplash.com/photo-1589367920969-ab8e050bbb04?auto=format&fit=crop&w=400&q=80',
+                description: 'Naturally fermented for 24 hours with a crisp golden crust and soft, airy interior. Baked fresh at dawn.'
+            },
+            {
+                id: 'p6',
+                name: 'Anker PowerLine 65W Fast USB-C Cable',
+                category: 'Electronics',
+                weight: '1.8m Braided',
+                price: 499,
+                mrp: 899,
+                discount: 44,
+                rating: 4.9,
+                reviewsCount: 620,
+                eta: '11 mins',
+                tags: ['Electronics', 'Flash'],
+                image: 'https://images.unsplash.com/photo-1583863788434-e58a36330cf0?auto=format&fit=crop&w=400&q=80',
+                description: 'Heavy duty military-grade braided nylon USB-C fast charging cable. Supports up to 65W Power Delivery for MacBooks & Phones.'
+            },
+            {
+                id: 'p7',
+                name: 'Blueberry & Cranberry Premium Trail Mix',
+                category: 'Snacks & Beverages',
+                weight: '250g Jar',
+                price: 249,
+                mrp: 350,
+                discount: 28,
+                rating: 4.8,
+                reviewsCount: 512,
+                eta: '10 mins',
+                tags: ['Popular'],
+                image: 'https://images.unsplash.com/photo-1599599810769-bcde5a160d32?auto=format&fit=crop&w=400&q=80',
+                description: 'Nutrient-packed medley of California almonds, cashews, dried blueberries, cranberries and pumpkin seeds.'
+            },
+            {
+                id: 'p8',
+                name: 'Fresh Alphonso Mangoes (Ratnagiri Grade A)',
+                category: 'Fruits & Vegetables',
+                weight: 'Box of 6 (Approx 1.5kg)',
+                price: 699,
+                mrp: 999,
+                discount: 30,
+                rating: 5.0,
+                reviewsCount: 1204,
+                eta: '14 mins',
+                tags: ['Fresh', 'Popular'],
+                image: 'https://images.unsplash.com/photo-1553279768-865429fa0078?auto=format&fit=crop&w=400&q=80',
+                description: 'Directly sourced naturally ripened GI-tagged Ratnagiri Alphonso mangoes. Heavenly aroma and sweetness.'
+            },
+            {
+                id: 'p9',
+                name: 'Pringles Sour Cream & Onion Crisps',
+                category: 'Snacks & Beverages',
+                weight: '107g Can',
+                price: 99,
+                mrp: 125,
+                discount: 20,
+                rating: 4.7,
+                reviewsCount: 1800,
+                eta: '9 mins',
+                tags: ['Under99', 'Snacks'],
+                image: 'https://images.unsplash.com/photo-1566478989037-eec170784d0b?auto=format&fit=crop&w=400&q=80',
+                description: 'Iconic stackable potato crisps with savoury sour cream, onion and herb crunch in every bite.'
+            },
+            {
+                id: 'p10',
+                name: 'Cold Pressed Pure Virgin Coconut Oil',
+                category: 'Household',
+                weight: '500ml Glass Bottle',
+                price: 280,
+                mrp: 340,
+                discount: 17,
+                rating: 4.8,
+                reviewsCount: 290,
+                eta: '12 mins',
+                tags: ['Popular'],
+                image: 'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?auto=format&fit=crop&w=400&q=80',
+                description: 'Unrefined, wood-pressed extra virgin coconut oil. Excellent for clean cooking, skin nourishment and hair.'
+            },
+            {
+                id: 'p11',
+                name: 'Duracell Ultra Alkaline AAA Batteries (Pack of 4)',
+                category: 'Electronics',
+                weight: '4 Units',
+                price: 160,
+                mrp: 200,
+                discount: 20,
+                rating: 4.9,
+                reviewsCount: 780,
+                eta: '8 mins',
+                tags: ['Electronics'],
+                image: 'https://images.unsplash.com/photo-1619725002198-6a689b72f41d?auto=format&fit=crop&w=400&q=80',
+                description: 'Powercheck technology allows you to see how much power is left inside. Up to 100% more life.'
+            },
+            {
+                id: 'p12',
+                name: 'Cerave Hydrating Facial Cleanser',
+                category: 'Personal Care',
+                weight: '237ml',
+                price: 790,
+                mrp: 950,
+                discount: 16,
+                rating: 4.9,
+                reviewsCount: 1420,
+                eta: '11 mins',
+                tags: ['Popular'],
+                image: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=400&q=80',
+                description: 'Formulated with 3 essential ceramides and hyaluronic acid to cleanse, hydrate and restore skin barrier.'
+            },
+            {
+                id: 'p13',
+                name: 'Sleepy Owl Premium French Vanilla Cold Coffee',
+                category: 'Snacks & Beverages',
+                weight: '200ml Bottle',
+                price: 85,
+                mrp: 100,
+                discount: 15,
+                rating: 4.8,
+                reviewsCount: 650,
+                eta: '9 mins',
+                tags: ['Under99', 'Snacks'],
+                image: 'https://images.unsplash.com/photo-1517701604599-bb29b565090c?auto=format&fit=crop&w=400&q=80',
+                description: 'Smooth 100% Arabica cold brew brewed for 18 hours, infused with pure French vanilla notes.'
+            },
+            {
+                id: 'p14',
+                name: 'Boat Bassheads In-Ear Wired Earphones',
+                category: 'Electronics',
+                weight: '1 Unit with Mic',
+                price: 349,
+                mrp: 999,
+                discount: 65,
+                rating: 4.6,
+                reviewsCount: 2190,
+                eta: '10 mins',
+                tags: ['Electronics', 'Flash'],
+                image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=400&q=80',
+                description: 'Super extra bass sound signature, inline microphone for HD calls, and tangle-free cable.'
+            },
+            {
+                id: 'p15',
+                name: 'Fresh Crisp Persian Cucumbers',
+                category: 'Fruits & Vegetables',
+                weight: '500g',
+                price: 35,
+                mrp: 50,
+                discount: 30,
+                rating: 4.7,
+                reviewsCount: 380,
+                eta: '8 mins',
+                tags: ['Fresh', 'Under99'],
+                image: 'https://images.unsplash.com/photo-1449300079323-02e209d9d3a6?auto=format&fit=crop&w=400&q=80',
+                description: 'Thin-skinned, seedless crisp Persian cucumbers harvested fresh daily from Bangalore farms.'
+            },
+            {
+                id: 'p16',
+                name: 'Dettol Original Germ Protection Handwash Refill',
+                category: 'Household',
+                weight: '675ml Pouch',
+                price: 99,
+                mrp: 130,
+                discount: 23,
+                rating: 4.9,
+                reviewsCount: 1980,
+                eta: '9 mins',
+                tags: ['Household', 'Under99'],
+                image: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=400&q=80',
+                description: 'Trusted 99.9% germ protection with pH-balanced formula and pine fragrance.'
+            }
+        ];
+
+        // Categories list
+        const CATEGORIES = [
+            { name: 'Groceries', icon: '🛒', count: '1,200+ items' },
+            { name: 'Fruits & Vegetables', icon: '🥦', count: '340+ items' },
+            { name: 'Dairy & Breakfast', icon: '🧀', count: '280+ items' },
+            { name: 'Snacks & Beverages', icon: '🥤', count: '850+ items' },
+            { name: 'Electronics', icon: '⚡', count: '190+ items' },
+            { name: 'Personal Care', icon: '✨', count: '420+ items' },
+            { name: 'Household', icon: '🧼', count: '310+ items' },
+            { name: 'Pharmacy & Wellness', icon: '💊', count: '250+ items' }
+        ];
+
+        // Hero dummy item
+        const heroStrawberryProduct = {
+            id: 'p-hero',
+            name: 'Organic Mahabaleshwar Berries',
+            category: 'Fruits & Vegetables',
+            weight: '250g Box',
+            price: 149,
+            mrp: 199,
+            discount: 25,
+            rating: 4.9,
+            reviewsCount: 88,
+            eta: '8 mins',
+            tags: ['Fresh'],
+            image: 'https://images.unsplash.com/photo-1587334274328-64186a80aeee?auto=format&fit=crop&w=400&q=80',
+            description: 'Sweet, freshly picked ruby red strawberries from cold Mahabaleshwar slopes.'
+        };
+
+        // --- APP STATE ---
+        let cart = {}; // { productId: qty }
+        let wishlist = new Set();
+        let currentCategory = 'All';
+        let currentTag = 'All';
+        let currentSort = 'popular';
+        let appliedCoupon = null; // { code, discountAmount }
+        let currentDeliveryETA = '11 mins';
+
+        // --- INITIALIZATION ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderCategories();
+            renderProducts();
+            renderFlashDeals();
+            updateCartUI();
+            startFlashCountdown();
+            lucide.createIcons();
+
+            // Keyboard shortcut for Cmd+K Search
+            window.addEventListener('keydown', (e) => {
+                if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+                    e.preventDefault();
+                    document.getElementById('main-search-input')?.focus();
+                }
+                if (e.key === 'Escape') {
+                    document.getElementById('search-dropdown')?.classList.add('hidden');
+                }
+            });
+        });
+
+        // --- RENDER CATEGORY CHIPS ---
+        function renderCategories() {
+            const container = document.getElementById('category-chips-container');
+            if (!container) return;
+            
+            container.innerHTML = CATEGORIES.map(cat => `
+                <button onclick="filterCategory('${cat.name}')" class="flex-shrink-0 bg-white hover:bg-slate-50 border border-slate-200/90 rounded-2xl p-3 sm:p-4 text-left transition duration-150 group min-w-[130px] sm:min-w-[150px] shadow-sm hover:shadow">
+                    <div class="text-2xl sm:text-3xl mb-1.5 group-hover:scale-110 transition-transform">${cat.icon}</div>
+                    <div class="font-bold text-xs sm:text-sm text-slate-800 group-hover:text-brand-600 truncate">${cat.name}</div>
+                    <div class="text-[10px] text-slate-400 font-medium">${cat.count}</div>
+                </button>
+            `).join('');
+        }
+
+        // --- RENDER FLASH DEALS ---
+        function renderFlashDeals() {
+            const container = document.getElementById('flash-deals-grid');
+            if (!container) return;
+            
+            // Pick 5 top discounted items
+            const flashItems = PRODUCTS.filter(p => p.discount >= 25).slice(0, 5);
+            container.innerHTML = flashItems.map(product => renderProductCardHTML(product, true)).join('');
+        }
+
+        // --- RENDER MAIN CATALOG PRODUCTS ---
+        function renderProducts() {
+            const container = document.getElementById('main-product-grid');
+            if (!container) return;
+
+            let filtered = [...PRODUCTS];
+
+            // Apply category filter
+            if (currentCategory !== 'All') {
+                filtered = filtered.filter(p => p.category.toLowerCase() === currentCategory.toLowerCase());
+            }
+
+            // Apply tag filter
+            if (currentTag === 'Fresh') {
+                filtered = filtered.filter(p => p.tags.includes('Fresh'));
+            } else if (currentTag === 'Under99') {
+                filtered = filtered.filter(p => p.price <= 99);
+            } else if (currentTag === 'Electronics') {
+                filtered = filtered.filter(p => p.category === 'Electronics');
+            }
+
+            // Apply sort
+            if (currentSort === 'price-low') {
+                filtered.sort((a, b) => a.price - b.price);
+            } else if (currentSort === 'price-high') {
+                filtered.sort((a, b) => b.price - a.price);
+            } else if (currentSort === 'discount') {
+                filtered.sort((a, b) => b.discount - a.discount);
+            } else if (currentSort === 'rating') {
+                filtered.sort((a, b) => b.rating - a.rating);
+            }
+
+            // Update title and count
+            const countEl = document.getElementById('product-count-display');
+            if (countEl) countEl.innerText = `Showing ${filtered.length} items`;
+
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-full py-12 text-center text-slate-400">
+                        <div class="text-4xl mb-2">🔍</div>
+                        <div class="font-bold text-slate-700">No items found</div>
+                        <div class="text-xs">Try selecting a different filter or search term.</div>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = filtered.map(product => renderProductCardHTML(product)).join('');
+            lucide.createIcons();
+        }
+
+        // Helper for single product card template
+        function renderProductCardHTML(product, isFlash = false) {
+            const qty = cart[product.id] || 0;
+            const isWish = wishlist.has(product.id);
+
+            return `
+                <div class="bg-white rounded-2xl border border-slate-200/80 p-3 sm:p-4 flex flex-col justify-between hover:border-brand-300 hover:shadow-xl transition-all duration-200 relative group">
+                    
+                    <!-- Top row: ETA & Wishlist -->
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="inline-flex items-center gap-1 bg-emerald-50 text-brand-700 font-bold text-[10px] px-2 py-0.5 rounded-md border border-emerald-100">
+                            <i data-lucide="zap" class="w-3 h-3 fill-brand-600"></i> ${product.eta}
+                        </span>
+                        
+                        <button onclick="toggleWishlist('${product.id}')" class="text-slate-300 hover:text-rose-500 transition">
+                            <i data-lucide="heart" class="w-4 h-4 ${isWish ? 'fill-rose-500 text-rose-500' : ''}"></i>
+                        </button>
+                    </div>
+
+                    <!-- Product Image Container -->
+                    <div class="relative w-full aspect-square bg-slate-50 rounded-xl overflow-hidden mb-3 cursor-pointer" onclick="openProductModal('${product.id}')">
+                        <img src="${product.image}" alt="${product.name}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                        ${product.discount > 0 ? `
+                            <span class="absolute bottom-1.5 left-1.5 bg-brand-600 text-white font-extrabold text-[9px] px-1.5 py-0.5 rounded shadow">
+                                ${product.discount}% OFF
+                            </span>
+                        ` : ''}
+                    </div>
+
+                    <!-- Meta Information -->
+                    <div class="space-y-1 cursor-pointer" onclick="openProductModal('${product.id}')">
+                        <div class="text-[11px] text-slate-400 font-medium truncate">${product.weight}</div>
+                        <h4 class="font-bold text-xs sm:text-sm text-slate-800 line-clamp-2 leading-snug group-hover:text-brand-600 transition">
+                            ${product.name}
+                        </h4>
+                        <div class="flex items-center gap-1 text-[11px] text-amber-500 font-bold">
+                            <span>★ ${product.rating}</span>
+                            <span class="text-slate-300 text-[10px]">(${product.reviewsCount})</span>
+                        </div>
+                    </div>
+
+                    <!-- Price & Add Button Row -->
+                    <div class="flex items-center justify-between pt-3 mt-2 border-t border-slate-100">
+                        <div class="flex flex-col">
+                            <span class="text-xs sm:text-sm font-extrabold text-slate-900">₹${product.price}</span>
+                            ${product.mrp > product.price ? `
+                                <span class="text-[10px] text-slate-400 line-through">₹${product.mrp}</span>
+                            ` : ''}
+                        </div>
+
+                        <!-- Quantity Selector / ADD Button -->
+                        <div id="btn-container-${product.id}">
+                            ${qty === 0 ? `
+                                <button onclick="addToCart('${product.id}')" class="bg-white hover:bg-brand-50 text-brand-700 hover:text-brand-800 border-2 border-brand-600 font-extrabold text-xs px-3.5 py-1.5 rounded-xl shadow-sm transition active:scale-90 flex items-center gap-1">
+                                    <span>ADD</span>
+                                </button>
+                            ` : `
+                                <div class="flex items-center bg-brand-600 text-white rounded-xl shadow-md overflow-hidden font-bold text-xs">
+                                    <button onclick="decrementCart('${product.id}')" class="px-2.5 py-1 hover:bg-brand-700 transition">-</button>
+                                    <span class="px-2">${qty}</span>
+                                    <button onclick="addToCart('${product.id}')" class="px-2.5 py-1 hover:bg-brand-700 transition">+</button>
+                                </div>
+                            `}
+                        </div>
+                    </div>
+
+                </div>
+            `;
+        }
+
+        // --- CART OPERATIONS ---
+        function addToCart(productId) {
+            cart[productId] = (cart[productId] || 0) + 1;
+            updateCartUI();
+            showToast('Added to cart', 'success');
+        }
+
+        function quickAddToCart(productObj) {
+            // Check if already in products
+            if (!PRODUCTS.find(p => p.id === productObj.id)) {
+                PRODUCTS.push(productObj);
+            }
+            addToCart(productObj.id);
+        }
+
+        function decrementCart(productId) {
+            if (cart[productId] > 1) {
+                cart[productId]--;
+            } else {
+                delete cart[productId];
+            }
+            updateCartUI();
+        }
+
+        function updateCartUI() {
+            // Recalculate totals
+            let totalItems = 0;
+            let itemTotal = 0;
+
+            for (const [id, qty] of Object.entries(cart)) {
+                const prod = PRODUCTS.find(p => p.id === id) || heroStrawberryProduct;
+                if (prod) {
+                    totalItems += qty;
+                    itemTotal += prod.price * qty;
+                }
+            }
+
+            // Delivery logic
+            const deliveryFee = itemTotal >= 199 || itemTotal === 0 ? 0 : 25;
+            let discountAmount = 0;
+            if (appliedCoupon) {
+                discountAmount = Math.min(appliedCoupon.discountAmount, itemTotal);
+            }
+            const grandTotal = Math.max(0, itemTotal + (itemTotal > 0 ? (deliveryFee + 4) : 0) - discountAmount);
+
+            // Update Badges & Headers
+            document.getElementById('cart-nav-count').innerText = `${totalItems} items`;
+            document.getElementById('cart-nav-total').innerText = `₹${grandTotal}`;
+            document.getElementById('cart-badge-mobile').innerText = totalItems;
+            
+            const bottomBadge = document.getElementById('bottom-cart-badge');
+            if (bottomBadge) {
+                bottomBadge.innerText = totalItems;
+                bottomBadge.classList.toggle('hidden', totalItems === 0);
+            }
+
+            // Update Bill rows in Drawer
+            document.getElementById('bill-item-total').innerText = `₹${itemTotal}`;
+            document.getElementById('bill-delivery-fee').innerText = deliveryFee === 0 ? 'FREE' : `₹${deliveryFee}`;
+            document.getElementById('bill-discount-amount').innerText = `-₹${discountAmount}`;
+            document.getElementById('bill-grand-total').innerText = `₹${grandTotal}`;
+            document.getElementById('checkout-btn-price').innerText = `₹${grandTotal}`;
+            document.getElementById('modal-checkout-total').innerText = `₹${grandTotal}`;
+            document.getElementById('place-order-price').innerText = `₹${grandTotal}`;
+
+            // Free delivery progress
+            const freeThreshold = 199;
+            const neededForFree = Math.max(0, freeThreshold - itemTotal);
+            const freeBar = document.getElementById('free-delivery-bar');
+            const freeText = document.getElementById('free-delivery-text');
+            const freePercent = document.getElementById('free-delivery-percent');
+            
+            if (itemTotal >= freeThreshold) {
+                freeText.innerText = '🎉 You unlocked FREE Delivery!';
+                freePercent.innerText = '100%';
+                freeBar.style.width = '100%';
+            } else {
+                const pct = Math.min(100, Math.round((itemTotal / freeThreshold) * 100));
+                freeText.innerText = `Add ₹${neededForFree} more for FREE Delivery`;
+                freePercent.innerText = `${pct}%`;
+                freeBar.style.width = `${pct}%`;
+            }
+
+            // Disable checkout button if empty
+            const checkoutBtn = document.getElementById('cart-checkout-btn');
+            if (checkoutBtn) {
+                checkoutBtn.disabled = totalItems === 0;
+            }
+
+            // Re-render Cart Drawer Items List
+            renderCartDrawerItems();
+
+            // Refresh cards on page
+            renderProducts();
+            renderFlashDeals();
+        }
+
+        function renderCartDrawerItems() {
+            const container = document.getElementById('cart-items-container');
+            if (!container) return;
+
+            const entries = Object.entries(cart);
+            if (entries.length === 0) {
+                container.innerHTML = `
+                    <div class="py-16 text-center text-slate-400 space-y-3">
+                        <div class="w-16 h-16 rounded-full bg-slate-100 flex items-center justify-center mx-auto text-2xl">🛒</div>
+                        <div class="font-bold text-slate-700">Your basket is feeling light</div>
+                        <div class="text-xs max-w-xs mx-auto">Explore fresh fruits, farm dairy and daily snacks to fill it in minutes!</div>
+                        <button onclick="closeCartDrawer()" class="bg-brand-600 text-white font-bold text-xs px-4 py-2 rounded-xl">Browse Catalog</button>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = entries.map(([id, qty]) => {
+                const product = PRODUCTS.find(p => p.id === id) || heroStrawberryProduct;
+                if (!product) return '';
+
+                return `
+                    <div class="flex items-center justify-between gap-3 py-3">
+                        <img src="${product.image}" alt="${product.name}" class="w-14 h-14 rounded-xl object-cover border border-slate-100">
+                        <div class="flex-1 min-w-0">
+                            <h5 class="text-xs font-bold text-slate-800 truncate">${product.name}</h5>
+                            <div class="text-[11px] text-slate-400">${product.weight}</div>
+                            <div class="text-xs font-extrabold text-slate-900 mt-0.5">₹${product.price * qty} <span class="text-[10px] text-slate-400 font-normal">(₹${product.price} each)</span></div>
+                        </div>
+
+                        <!-- Stepper -->
+                        <div class="flex items-center bg-slate-100 rounded-xl font-bold text-xs border border-slate-200">
+                            <button onclick="decrementCart('${product.id}')" class="px-2.5 py-1 text-slate-600 hover:text-black">-</button>
+                            <span class="px-1.5 text-slate-800 font-extrabold">${qty}</span>
+                            <button onclick="addToCart('${product.id}')" class="px-2.5 py-1 text-slate-600 hover:text-black">+</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            lucide.createIcons();
+        }
+
+        // --- COUPONS ---
+        function applyCouponCode(code) {
+            if (code === 'NXDFIRST') {
+                appliedCoupon = { code: 'NXDFIRST', discountAmount: 100 };
+                document.getElementById('coupon-applied-tag').classList.remove('hidden');
+                document.getElementById('coupon-applied-tag').classList.add('flex');
+                document.getElementById('coupon-name-text').innerText = 'NXDFIRST (-₹100)';
+                updateCartUI();
+                showToast('Coupon NXDFIRST applied! ₹100 saved', 'success');
+            } else {
+                showToast('Invalid Coupon Code', 'error');
+            }
+        }
+
+        function applyCouponInput() {
+            const input = document.getElementById('coupon-input');
+            if (input && input.value.trim()) {
+                applyCouponCode(input.value.trim().toUpperCase());
+            }
+        }
+
+        function removeCoupon() {
+            appliedCoupon = null;
+            document.getElementById('coupon-applied-tag').classList.add('hidden');
+            document.getElementById('coupon-applied-tag').classList.remove('flex');
+            updateCartUI();
+            showToast('Coupon removed', 'info');
+        }
+
+        // --- WISHLIST ---
+        function toggleWishlist(productId) {
+            if (wishlist.has(productId)) {
+                wishlist.delete(productId);
+                showToast('Removed from saved items', 'info');
+            } else {
+                wishlist.add(productId);
+                showToast('Added to saved items', 'success');
+            }
+            updateWishlistUI();
+            renderProducts();
+            renderFlashDeals();
+        }
+
+        function updateWishlistUI() {
+            const badge = document.getElementById('wishlist-badge');
+            if (badge) {
+                badge.innerText = wishlist.size;
+                badge.classList.toggle('hidden', wishlist.size === 0);
+            }
+            renderWishlistItems();
+        }
+
+        function renderWishlistItems() {
+            const container = document.getElementById('wishlist-items-container');
+            if (!container) return;
+
+            if (wishlist.size === 0) {
+                container.innerHTML = `
+                    <div class="py-16 text-center text-slate-400 space-y-2">
+                        <i data-lucide="heart" class="w-12 h-12 text-slate-300 mx-auto"></i>
+                        <div class="font-bold text-slate-700">No saved items yet</div>
+                        <div class="text-xs">Tap the heart on any product to save for later!</div>
+                    </div>
+                `;
+                lucide.createIcons();
+                return;
+            }
+
+            const items = Array.from(wishlist).map(id => PRODUCTS.find(p => p.id === id)).filter(Boolean);
+            container.innerHTML = items.map(p => `
+                <div class="flex items-center justify-between gap-3 py-3">
+                    <img src="${p.image}" alt="${p.name}" class="w-12 h-12 rounded-xl object-cover">
+                    <div class="flex-1 min-w-0">
+                        <h5 class="text-xs font-bold text-slate-800 truncate">${p.name}</h5>
+                        <div class="text-xs font-extrabold text-slate-900">₹${p.price}</div>
+                    </div>
+                    <button onclick="addToCart('${p.id}'); toggleWishlist('${p.id}')" class="bg-brand-600 text-white font-bold text-xs px-3 py-1.5 rounded-xl hover:bg-brand-700 transition">
+                        Move to Cart
+                    </button>
+                </div>
+            `).join('');
+            lucide.createIcons();
+        }
+
+        // --- QUICK SEARCH & FILTERS ---
+        function handleSearch(query) {
+            const dropdown = document.getElementById('search-dropdown');
+            const resultsList = document.getElementById('search-results-list');
+            if (!dropdown || !resultsList) return;
+
+            if (!query || query.trim().length === 0) {
+                dropdown.classList.add('hidden');
+                return;
+            }
+
+            const q = query.toLowerCase();
+            const matches = PRODUCTS.filter(p => 
+                p.name.toLowerCase().includes(q) || 
+                p.category.toLowerCase().includes(q) ||
+                p.description.toLowerCase().includes(q)
+            );
+
+            dropdown.classList.remove('hidden');
+
+            if (matches.length === 0) {
+                resultsList.innerHTML = `<div class="p-3 text-xs text-slate-400 text-center">No products found matching "${query}"</div>`;
+                return;
+            }
+
+            resultsList.innerHTML = matches.slice(0, 5).map(p => `
+                <div onclick="openProductModal('${p.id}'); hideSearchDropdown();" class="flex items-center gap-3 p-2 hover:bg-slate-50 rounded-xl cursor-pointer transition">
+                    <img src="${p.image}" class="w-10 h-10 rounded-lg object-cover">
+                    <div class="flex-1 min-w-0">
+                        <div class="text-xs font-bold text-slate-800 truncate">${p.name}</div>
+                        <div class="text-[10px] text-slate-400">${p.category} • ${p.weight}</div>
+                    </div>
+                    <div class="text-xs font-extrabold text-brand-700">₹${p.price}</div>
+                </div>
+            `).join('');
+        }
+
+        function showSearchDropdown() {
+            const input = document.getElementById('main-search-input');
+            if (input && input.value.trim().length > 0) {
+                document.getElementById('search-dropdown')?.classList.remove('hidden');
+            }
+        }
+
+        function hideSearchDropdown() {
+            document.getElementById('search-dropdown')?.classList.add('hidden');
+        }
+
+        function quickSearch(term) {
+            const input = document.getElementById('main-search-input');
+            if (input) {
+                input.value = term;
+                handleSearch(term);
+            }
+        }
+
+        function toggleMobileSearch() {
+            const bar = document.getElementById('mobile-search-bar');
+            bar.classList.toggle('hidden');
+            if (!bar.classList.contains('hidden')) {
+                document.getElementById('mobile-search-input')?.focus();
+            }
+        }
+
+        function filterCategory(categoryName) {
+            currentCategory = categoryName;
+            currentTag = 'All';
+            document.getElementById('main-catalog-title').innerText = categoryName === 'All' ? 'Popular Near You' : categoryName;
+            
+            // Highlight chip tags
+            document.querySelectorAll('.filter-tag').forEach(t => t.classList.remove('border-brand-600', 'bg-brand-50', 'text-brand-700'));
+            
+            renderProducts();
+            
+            // Scroll down to products if not there
+            document.getElementById('popular-section')?.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function setFilterTag(tag) {
+            currentTag = tag;
+            currentCategory = 'All';
+            document.getElementById('main-catalog-title').innerText = tag === 'All' ? 'Popular Near You' : `${tag} Selections`;
+
+            document.querySelectorAll('.filter-tag').forEach(btn => {
+                btn.classList.remove('border-brand-600', 'bg-brand-50', 'text-brand-700');
+                btn.classList.add('border-slate-200', 'bg-white', 'text-slate-600');
+            });
+            event?.currentTarget?.classList.add('border-brand-600', 'bg-brand-50', 'text-brand-700');
+            event?.currentTarget?.classList.remove('border-slate-200', 'bg-white', 'text-slate-600');
+
+            renderProducts();
+        }
+
+        function handleSortChange(sortVal) {
+            currentSort = sortVal;
+            renderProducts();
+        }
+
+        // --- PRODUCT QUICKVIEW MODAL ---
+        function openProductModal(productId) {
+            const product = PRODUCTS.find(p => p.id === productId) || heroStrawberryProduct;
+            if (!product) return;
+
+            const modalContent = document.getElementById('modal-product-content');
+            const qty = cart[product.id] || 0;
+
+            modalContent.innerHTML = `
+                <!-- Product Image Gallery View -->
+                <div class="space-y-3">
+                    <div class="aspect-square bg-slate-50 rounded-2xl overflow-hidden border border-slate-100">
+                        <img src="${product.image}" alt="${product.name}" class="w-full h-full object-cover">
+                    </div>
+                    <div class="flex items-center gap-2 text-xs text-brand-700 bg-brand-50 p-2.5 rounded-xl border border-brand-100">
+                        <i data-lucide="zap" class="w-4 h-4 fill-brand-600"></i>
+                        <span class="font-bold">Lightning dispatch: At your door in ${product.eta}</span>
+                    </div>
+                </div>
+
+                <!-- Product Details Column -->
+                <div class="flex flex-col justify-between space-y-4">
+                    <div class="space-y-2">
+                        <div class="inline-block bg-slate-100 text-slate-600 text-[10px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded">
+                            ${product.category}
+                        </div>
+                        <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900">${product.name}</h2>
+                        <div class="text-xs text-slate-400 font-medium">${product.weight}</div>
+
+                        <div class="flex items-center gap-2 text-xs text-amber-500 font-bold pt-1">
+                            <span>★ ${product.rating}</span>
+                            <span class="text-slate-400 underline cursor-pointer">(${product.reviewsCount} customer reviews)</span>
+                        </div>
+
+                        <!-- Price box -->
+                        <div class="flex items-baseline gap-2 pt-2">
+                            <span class="text-2xl font-black text-slate-900">₹${product.price}</span>
+                            ${product.mrp > product.price ? `
+                                <span class="text-sm text-slate-400 line-through">₹${product.mrp}</span>
+                                <span class="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded">${product.discount}% OFF</span>
+                            ` : ''}
+                        </div>
+
+                        <!-- Description text -->
+                        <p class="text-xs text-slate-600 leading-relaxed pt-2">
+                            ${product.description}
+                        </p>
+
+                        <!-- Highlights Specs -->
+                        <div class="grid grid-cols-2 gap-2 pt-2 text-[11px] text-slate-600">
+                            <div class="bg-slate-50 p-2 rounded-xl border border-slate-100 font-medium">🌿 100% Quality Inspected</div>
+                            <div class="bg-slate-50 p-2 rounded-xl border border-slate-100 font-medium">❄️ Cold-Chain Preserved</div>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="pt-4 border-t border-slate-100 flex items-center gap-3">
+                        <button onclick="addToCart('${product.id}'); closeProductModal();" class="flex-1 bg-brand-600 hover:bg-brand-700 text-white font-extrabold py-3 rounded-2xl shadow-lg shadow-brand-600/20 text-xs flex items-center justify-center gap-2 transition">
+                            <i data-lucide="shopping-bag" class="w-4 h-4"></i>
+                            <span>Add to Basket (₹${product.price})</span>
+                        </button>
+                        <button onclick="toggleWishlist('${product.id}')" class="p-3 rounded-2xl border border-slate-200 hover:bg-slate-50 text-slate-600 transition">
+                            <i data-lucide="heart" class="w-5 h-5 ${wishlist.has(product.id) ? 'fill-rose-500 text-rose-500' : ''}"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('product-detail-modal')?.classList.remove('hidden');
+            lucide.createIcons();
+        }
+
+        function closeProductModal() {
+            document.getElementById('product-detail-modal')?.classList.add('hidden');
+        }
+
+        // --- ORDER TRACKING SIMULATION & CHECKOUT ---
+        function openCheckoutModal() {
+            closeCartDrawer();
+            document.getElementById('checkout-modal')?.classList.remove('hidden');
+        }
+
+        function closeCheckoutModal() {
+            document.getElementById('checkout-modal')?.classList.add('hidden');
+        }
+
+        function simulateOrderPlacement() {
+            const btn = document.getElementById('place-order-button');
+            btn.innerHTML = `<span class="animate-spin mr-2">⏳</span> Processing Secure Payment...`;
+            btn.disabled = true;
+
+            setTimeout(() => {
+                // Confetti explosion
+                confetti({
+                    particleCount: 100,
+                    spread: 70,
+                    origin: { y: 0.6 }
+                });
+
+                // Clear cart
+                cart = {};
+                updateCartUI();
+                closeCheckoutModal();
+
+                // Open Live Tracking UI
+                openTrackingModal();
+                showToast('Order placed successfully! Arriving in 11 mins.', 'success');
+
+                // Reset button
+                btn.innerHTML = `<i data-lucide="shield-check" class="w-4 h-4"></i> <span>Place Order</span>`;
+                btn.disabled = false;
+                lucide.createIcons();
+
+                // Show active order pill in header
+                document.getElementById('active-order-pill')?.classList.remove('hidden');
+                document.getElementById('active-order-pill')?.classList.add('flex');
+                document.getElementById('mobile-order-dot')?.classList.remove('hidden');
+            }, 1200);
+        }
+
+        function openTrackingModal() {
+            document.getElementById('tracking-modal')?.classList.remove('hidden');
+        }
+
+        function closeTrackingModal() {
+            document.getElementById('tracking-modal')?.classList.add('hidden');
+        }
+
+        function sendRiderTip() {
+            showToast('₹20 Rider Tip added! Thank you for supporting our fleet.', 'success');
+        }
+
+        // --- LOCATION & AUTH MODALS ---
+        function openLocationModal() {
+            document.getElementById('location-modal')?.classList.remove('hidden');
+        }
+
+        function closeLocationModal() {
+            document.getElementById('location-modal')?.classList.add('hidden');
+        }
+
+        function selectLocation(locName, eta) {
+            document.getElementById('current-location-text').innerText = locName;
+            document.getElementById('eta-header').innerText = eta;
+            currentDeliveryETA = eta;
+            closeLocationModal();
+            showToast(`Delivery location updated to ${locName}`, 'info');
+        }
+
+        function openAuthModal() {
+            document.getElementById('auth-modal')?.classList.remove('hidden');
+        }
+
+        function closeAuthModal() {
+            document.getElementById('auth-modal')?.classList.add('hidden');
+        }
+
+        function simulateLogin() {
+            const phone = document.getElementById('login-phone').value || '9876543210';
+            document.getElementById('user-name-display').innerText = `Hi, Aditya`;
+            document.getElementById('user-avatar-initial').innerText = 'A';
+            closeAuthModal();
+            showToast('Signed in successfully!', 'success');
+        }
+
+        function openWishlistModal() {
+            document.getElementById('wishlist-modal')?.classList.remove('hidden');
+            renderWishlistItems();
+        }
+
+        function closeWishlistModal() {
+            document.getElementById('wishlist-modal')?.classList.add('hidden');
+        }
+
+        function openCartDrawer() {
+            document.getElementById('cart-drawer')?.classList.remove('hidden');
+        }
+
+        function closeCartDrawer() {
+            document.getElementById('cart-drawer')?.classList.add('hidden');
+        }
+
+        function openCategorySheet() {
+            filterCategory('All');
+        }
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // --- TOAST NOTIFICATION UTILITY ---
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            if (!container) return;
+
+            const toast = document.createElement('div');
+            const bgClass = type === 'success' ? 'bg-slate-900 text-emerald-400 border-brand-500' : 'bg-slate-900 text-white border-slate-700';
+
+            toast.className = `flex items-center gap-2 px-4 py-3 rounded-2xl shadow-2xl border text-xs font-bold transition-all duration-300 transform translate-y-2 opacity-0 pointer-events-auto ${bgClass}`;
+            toast.innerHTML = `
+                <span>${type === 'success' ? '⚡' : 'ℹ️'}</span>
+                <span>${message}</span>
+            `;
+
+            container.appendChild(toast);
+
+            // Animate in
+            setTimeout(() => {
+                toast.classList.remove('translate-y-2', 'opacity-0');
+            }, 50);
+
+            // Animate out
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-2');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // --- FLASH TIMER SIMULATOR ---
+        function startFlashCountdown() {
+            let totalSeconds = 38 * 60 + 42; // 38m 42s initial
+            setInterval(() => {
+                if (totalSeconds <= 0) totalSeconds = 60 * 60;
+                totalSeconds--;
+
+                const hours = Math.floor(totalSeconds / 3600);
+                const minutes = Math.floor((totalSeconds % 3600) / 60);
+                const seconds = totalSeconds % 60;
+
+                const pad = (n) => String(n).padStart(2, '0');
+
+                const hEl = document.getElementById('timer-hours');
+                const mEl = document.getElementById('timer-minutes');
+                const sEl = document.getElementById('timer-seconds');
+
+                if (hEl) hEl.innerText = pad(hours);
+                if (mEl) mEl.innerText = pad(minutes);
+                if (sEl) sEl.innerText = pad(seconds);
+            }, 1000);
+        }
+    </script>
+</body>
+</html>
